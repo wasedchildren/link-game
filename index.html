@@ -277,89 +277,10 @@
           }
         
               
-              // 注入样式
-              const style = document.createElement('style');
-              style.id = 'trae-badge-plugin-styles';
-              style.textContent = css;
-              document.head.appendChild(style);
+          
+             
               
-              // 创建 Badge 函数
-              function createBadge() {
-                // 移除已存在的 badge
-                const existingBadge = document.getElementById('trae-badge-plugin');
-                if (existingBadge) {
-                  existingBadge.remove();
-                }
-                
-                // 确定主题
-                let variant = 'dark';
-                if (true) {
-                  variant = autoSelectTheme('#root');
-                }
-                
-                const isDarkBackground = variant === 'dark';
-                const logoType = isDarkBackground ? 'light' : 'dark';
-                const cancelIcon = isDarkBackground ? cancelLight : cancelDark;
-                
-                const badge = document.createElement('div');
-                badge.id = 'trae-badge-plugin';
-                badge.className = `trae-badge trae-badge--${variant} trae-badge--bottom-right`;
-                badge.innerHTML = `
-                  <div class="trae-badge-content">
-                    <div class="trae-badge-logo">${logos[logoType]}</div>
-                    <div class="trae-badge-share">${shareIcon}</div>
-                  </div>
-                  <div class="trae-badge-cancel">${cancelIcon}</div>
-                `;
-                
-                // 添加点击事件
-                
-                badge.style.cursor = 'pointer';
-                badge.addEventListener('click', (e) => {
-                  if (e.target.closest('.trae-badge-cancel')) return;
-                  window.open('https://www.trae.ai/solo?showJoin=1', '_blank');
-                });
-                
-                
-                // 添加取消按钮事件
-                const cancelButton = badge.querySelector('.trae-badge-cancel');
-                if (cancelButton) {
-                  cancelButton.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    badge.remove();
-                  });
-                }
-                
-                document.body.appendChild(badge);
-                return badge;
-              }
               
-              // 初始创建 badge
-              // 等待 React 组件渲染完成后再创建 badge
-              function initBadge() {
-                // 使用 requestAnimationFrame 等待渲染完成
-                requestAnimationFrame(() => {
-                  // 再次检查目标元素是否存在
-                  const targetElement = document.querySelector('#root');
-                  if (targetElement) {
-                    const badge = createBadge();
-                  } else {
-                    // 如果还没有找到，等待一段时间再试
-                    setTimeout(() => {
-                      const badge = createBadge();
-                    }, 500);
-                  }
-                });
-              }
-              
-              if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initBadge);
-              } else {
-                // DOM 已经加载完成，但 React 可能还没渲染
-                initBadge();
-              }
-              
-            })();
           </script>
         
 </body>
