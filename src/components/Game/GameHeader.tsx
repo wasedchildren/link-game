@@ -20,30 +20,30 @@ export function GameHeader() {
   };
 
   return (
-    <div className="w-full max-w-md px-4 mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="mb-4 w-full max-w-md px-2 sm:px-4">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="text-2xl">⭐</span>
-          <span className="text-white font-bold text-lg">{score}</span>
+          <span className="text-lg font-bold text-white sm:text-xl">{score}</span>
         </div>
         
-        <div className="flex items-center gap-2">
-          <span className="text-white/70 text-sm">关卡 {currentLevel}</span>
-          <span className="text-white font-medium">{level?.name}</span>
+        <div className="min-w-0 flex-1 text-center">
+          <div className="text-sm text-white/70">关卡 {currentLevel}</div>
+          <div className="truncate text-sm font-medium text-white sm:text-base">{level?.name}</div>
         </div>
         
         <button
           onClick={togglePause}
-          className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
         >
           <span className="text-2xl">{isPaused ? '▶️' : '⏸️'}</span>
         </button>
       </div>
       
-      <div className="flex items-center gap-4">
-        <div className={`flex-1 flex items-center gap-2 ${getTimeColor()}`}>
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className={`flex flex-1 items-center gap-2 ${getTimeColor()}`}>
           <span className="text-xl">⏱️</span>
-          <span className="font-mono text-xl font-bold">{formatTime(timeLeft)}</span>
+          <span className="font-mono text-lg font-bold sm:text-xl">{formatTime(timeLeft)}</span>
         </div>
         
         <div className="flex-1">

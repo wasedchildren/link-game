@@ -23,7 +23,7 @@ export function GameScene() {
   }, [isPlaying, isPaused, updateTime]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-950">
+    <div className="flex min-h-[100dvh] w-full flex-col items-center overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-950 px-3 py-4 sm:px-4">
       <GameHeader />
       <GameBoard />
       <PauseModal />

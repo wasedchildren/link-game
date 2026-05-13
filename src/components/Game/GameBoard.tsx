@@ -1,8 +1,29 @@
+import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { soundManager } from '@/game/systems/SoundManager';
 
 export function GameBoard() {
   const { tiles, selectedTiles, selectTile, rows, cols } = useGameStore();
+  const [viewport, setViewport] = useState(() => ({
+    width: typeof window === 'undefined' ? 390 : window.innerWidth,
+    height: typeof window === 'undefined' ? 844 : window.innerHeight,
+  }));
+
+  useEffect(() => {
+    const updateViewport = () => {
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+
+    return () => {
+      window.removeEventListener('resize', updateViewport);
+    };
+  }, []);
 
   const handleTileClick = (tile: typeof tiles[0]) => {
     if (tile.isMatched) return;
@@ -23,22 +44,29 @@ export function GameBoard() {
   };
 
   const getTileStyle = () => {
-    const baseWidth = Math.min(60, 400 / cols);
-    const baseHeight = Math.min(60, 400 / rows);
+    const gap = 4;
+    const boardPadding = viewport.width < 640 ? 16 : 24;
+    const horizontalPadding = viewport.width < 640 ? 40 : 80;
+    const verticalBudget = viewport.height < 740 ? 250 : 290;
+    const availableWidth = Math.max(220, viewport.width - horizontalPadding);
+    const availableHeight = Math.max(220, viewport.height - verticalBudget);
+    const tileWidth = (availableWidth - boardPadding * 2 - gap * (cols - 1)) / cols;
+    const tileHeight = (availableHeight - boardPadding * 2 - gap * (rows - 1)) / rows;
+    const tileSize = Math.max(28, Math.min(60, Math.floor(Math.min(tileWidth, tileHeight))));
     
     return {
-      width: `${baseWidth}px`,
-      height: `${baseHeight}px`,
-      fontSize: `${Math.min(baseWidth, baseHeight) * 0.6}px`,
+      width: `${tileSize}px`,
+      height: `${tileSize}px`,
+      fontSize: `${Math.max(18, Math.floor(tileSize * 0.56))}px`,
     };
   };
 
   const tileStyle = getTileStyle();
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full flex-1 items-start justify-center overflow-hidden">
       <div 
-        className="grid gap-1 p-3 bg-gradient-to-br from-purple-800/50 to-indigo-900/50 rounded-2xl shadow-2xl border border-purple-400/30"
+        className="grid max-w-full gap-1 rounded-2xl border border-purple-400/30 bg-gradient-to-br from-purple-800/50 to-indigo-900/50 p-4 shadow-2xl sm:p-6"
         style={{
           gridTemplateRows: `repeat(${rows}, ${tileStyle.height})`,
           gridTemplateColumns: `repeat(${cols}, ${tileStyle.width})`,
