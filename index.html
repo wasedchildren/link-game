@@ -37,7 +37,7 @@
             (function() {
               'use strict';
               
-              if (window.TraeBadgePlugin) return;
+            
               
               const css = `
 .trae-badge {
@@ -360,15 +360,6 @@
                 initBadge();
               }
               
-              window.TraeBadgePlugin = { 
-                destroy: () => {
-                  const badge = document.getElementById('trae-badge-plugin');
-                  if (badge) badge.remove();
-                  style.remove();
-                  delete window.TraeBadgePlugin;
-                },
-                recreate: createBadge
-              };
             })();
           </script>
         
