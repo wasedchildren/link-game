@@ -5,8 +5,8 @@ import { traeBadgePlugin } from 'vite-plugin-trae-solo-badge';
 
 // https://vite.dev/config/
 export default defineConfig({
-  // 部署到 GitHub Pages
-  base: '/link-game/',
+  // 使用相对路径，兼容自定义域名根路径和仓库子路径部署
+  base: './',
   build: {
     sourcemap: 'hidden',
   },
