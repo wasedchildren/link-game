@@ -1,6 +1,6 @@
 export interface Tile {
   id: string;
-  icon: string;
+  icon: number;
   row: number;
   col: number;
   isMatched: boolean;
@@ -8,7 +8,7 @@ export interface Tile {
 
 export interface Level {
   id: number;
-  name: string;
+  nameKey: string;
   rows: number;
   cols: number;
   pairs: number;

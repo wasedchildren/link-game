@@ -12,6 +12,13 @@ class SoundManager {
     }
     return this.audioContext;
   }
+
+  async resumeContext() {
+    const ctx = this.initContext();
+    if (ctx.state === 'suspended') {
+      await ctx.resume();
+    }
+  }
   
   setMuted(muted: boolean) {
     this.isMuted = muted;

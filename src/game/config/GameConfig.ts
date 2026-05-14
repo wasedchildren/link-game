@@ -1,20 +1,19 @@
 import type { Level, Tile } from '@/types/game';
 
 export const ICONS = [
-  '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼',
-  '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🐔',
-  '🦄', '🐝', '🦋', '🐢', '🐙', '🦀', '🐠', '🐬',
-  '🌸', '🌺', '🌻', '🌹', '🌷', '🌵', '🌲', '🍀',
-  '🍎', '🍊', '🍋', '🍇', '🍓', '🍑', '🍒', '🥝',
-  '⚽', '🏀', '🎾', '🏈', '⚾', '🎱', '🏆', '🎮'
+  0, 1, 2, 3, 4, 5, 6, 7,
+  8, 9, 10, 11, 12, 13, 14, 15,
+  16, 17, 18, 19, 20, 21, 22, 23,
+  24, 25, 26, 27, 28, 29, 30, 31,
+  32, 33, 34, 35, 36, 37, 38, 39,
 ];
 
 export const LEVELS: Level[] = [
-  { id: 1, name: '新手入门', rows: 4, cols: 4, pairs: 8, timeLimit: 120 },
-  { id: 2, name: '初级挑战', rows: 4, cols: 6, pairs: 12, timeLimit: 150 },
-  { id: 3, name: '进阶训练', rows: 6, cols: 6, pairs: 18, timeLimit: 180 },
-  { id: 4, name: '高手进阶', rows: 6, cols: 8, pairs: 24, timeLimit: 200 },
-  { id: 5, name: '专家模式', rows: 8, cols: 8, pairs: 32, timeLimit: 240 },
+  { id: 1, nameKey: 'levels.level1', rows: 4, cols: 4, pairs: 8, timeLimit: 120 },
+  { id: 2, nameKey: 'levels.level2', rows: 4, cols: 6, pairs: 12, timeLimit: 150 },
+  { id: 3, nameKey: 'levels.level3', rows: 6, cols: 6, pairs: 18, timeLimit: 180 },
+  { id: 4, nameKey: 'levels.level4', rows: 6, cols: 8, pairs: 24, timeLimit: 200 },
+  { id: 5, nameKey: 'levels.level5', rows: 8, cols: 8, pairs: 32, timeLimit: 240 },
 ];
 
 export const GAME_CONFIG = {
