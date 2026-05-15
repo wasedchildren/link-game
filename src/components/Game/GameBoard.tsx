@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { soundManager } from '@/game/systems/SoundManager';
+import { SpriteIcon } from '@/components/ui/SpriteIcon';
 
 export function GameBoard() {
   const { tiles, selectedTiles, selectTile, rows, cols } = useGameStore();
@@ -57,7 +58,7 @@ export function GameBoard() {
     return {
       width: `${tileSize}px`,
       height: `${tileSize}px`,
-      fontSize: `${Math.max(18, Math.floor(tileSize * 0.56))}px`,
+      iconSize: Math.max(20, Math.floor(tileSize * 0.62)),
     };
   };
 
@@ -90,7 +91,11 @@ export function GameBoard() {
             `}
             style={tileStyle}
           >
-            <span className="drop-shadow-sm">{tile.icon}</span>
+            <SpriteIcon
+              icon={tile.icon}
+              size={tileStyle.iconSize}
+              className="drop-shadow-sm"
+            />
           </button>
         ))}
       </div>

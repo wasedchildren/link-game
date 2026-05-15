@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pet Link Up Support</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #14031f;
+        --panel: rgba(255, 255, 255, 0.08);
+        --panel-border: rgba(255, 255, 255, 0.14);
+        --text: #f5ecff;
+        --muted: rgba(245, 236, 255, 0.8);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "SF Pro Display", "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top right, rgba(244, 114, 182, 0.22), transparent 35%),
+          linear-gradient(160deg, #14031f 0%, #34115b 48%, #5f0d62 100%);
+      }
+
+      main {
+        width: min(860px, calc(100% - 32px));
+        margin: 48px auto;
+        padding: 32px;
+        border-radius: 28px;
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        backdrop-filter: blur(18px);
+      }
+
+      h1,
+      h2 {
+        margin: 0 0 16px;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      ul {
+        padding-left: 20px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        margin-bottom: 14px;
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: rgba(168, 85, 247, 0.18);
+        color: #ffd7ec;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .card {
+        margin-top: 24px;
+        padding: 20px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
+      a {
+        color: #ffd55b;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Pet Link Up · Support</div>
+      <h1>Support</h1>
+      <p>
+        Thanks for playing Pet Link Up. This page provides basic support information for the current
+        release of the app.
+      </p>
+
+      <h2>Game Features</h2>
+      <ul>
+        <li>Single-player puzzle gameplay</li>
+        <li>Five unlockable stages</li>
+        <li>Device-language aware English and Simplified Chinese support</li>
+        <li>Optional background music toggle</li>
+      </ul>
+
+      <h2>Troubleshooting</h2>
+      <ul>
+        <li>If the app language looks outdated, fully close and reopen the app after changing device language.</li>
+        <li>If audio does not start immediately on mobile, tap the screen once to enable audio playback.</li>
+        <li>If app progress looks incorrect, reinstalling the app may reset locally stored progress.</li>
+      </ul>
+
+      <div class="card">
+        <h2>Contact the Developer</h2>
+        <p>
+          If you need help with the game, bug reporting, or App Store support questions, please contact
+          the developer by email.
+        </p>
+        <p><a href="mailto:wasedchilden@gmail.com">wasedchilden@gmail.com</a></p>
+      </div>
+
+      <div class="card">
+        <h2>Privacy</h2>
+        <p>
+          Read the full <a href="/privacy-policy.html">Privacy Policy</a>.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>

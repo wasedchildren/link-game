@@ -1,9 +1,13 @@
 import { useGameStore } from '@/store/gameStore';
 import { LEVELS } from '@/game/config/GameConfig';
 import { soundManager } from '@/game/systems/SoundManager';
+import { ChevronLeft, Coins, Lock, Star } from 'lucide-react';
+import { SpriteIcon } from '@/components/ui/SpriteIcon';
+import { useI18n } from '@/i18n';
 
 export function LevelSelect() {
   const { unlockedLevels, startLevel, setScene, coins, stars } = useGameStore();
+  const { t } = useI18n();
 
   const isLevelUnlocked = (levelId: number) => {
     return unlockedLevels.includes(levelId);
@@ -27,23 +31,23 @@ export function LevelSelect() {
           onClick={handleBack}
           className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
         >
-          <span className="text-xl">←</span>
-          <span>返回</span>
+          <ChevronLeft className="h-5 w-5" />
+          <span>{t('common.back')}</span>
         </button>
         
         <div className="flex gap-4">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center gap-2">
-            <span className="text-lg">💰</span>
+            <Coins className="h-5 w-5 text-amber-300" />
             <span className="text-white font-bold">{coins}</span>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center gap-2">
-            <span className="text-lg">⭐</span>
+            <Star className="h-5 w-5 fill-yellow-300 text-yellow-300" />
             <span className="text-white font-bold">{stars}</span>
           </div>
         </div>
       </div>
 
-      <h1 className="text-3xl font-bold text-white mb-6">选择关卡</h1>
+      <h1 className="text-3xl font-bold text-white mb-6">{t('levelSelect.title')}</h1>
 
       <div className="grid grid-cols-3 gap-4 w-full max-w-md">
         {LEVELS.map((level) => {
@@ -61,14 +65,18 @@ export function LevelSelect() {
                 }
               `}
             >
-              <span className={`text-4xl ${!unlocked ? 'grayscale' : ''}`}>
-                {unlocked ? '🎮' : '🔒'}
+              <span className={`flex h-12 items-center justify-center ${!unlocked ? 'opacity-60' : ''}`}>
+                {unlocked ? (
+                  <SpriteIcon icon={38} size={40} label={t('levelSelect.unlockedLevelIcon')} />
+                ) : (
+                  <Lock className="h-10 w-10 text-gray-400" />
+                )}
               </span>
               <span className={`font-bold mt-2 ${unlocked ? 'text-white' : 'text-gray-400'}`}>
-                关卡 {level.id}
+                {t('common.levelLabel', { level: level.id })}
               </span>
               <span className={`text-xs mt-1 ${unlocked ? 'text-white/70' : 'text-gray-500'}`}>
-                {level.name}
+                {t(level.nameKey)}
               </span>
             </button>
           );
@@ -76,12 +84,12 @@ export function LevelSelect() {
       </div>
 
       <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-xl p-4 w-full max-w-md">
-        <h3 className="text-white font-bold mb-2">游戏规则</h3>
+        <h3 className="text-white font-bold mb-2">{t('levelSelect.rulesTitle')}</h3>
         <ul className="text-white/70 text-sm space-y-1">
-          <li>• 点击两个相同的图标进行配对</li>
-          <li>• 连线最多只能有两次转弯</li>
-          <li>• 在时间结束前消除所有图标</li>
-          <li>• 剩余时间越多，得分越高</li>
+          <li>{`• ${t('levelSelect.rules.first')}`}</li>
+          <li>{`• ${t('levelSelect.rules.second')}`}</li>
+          <li>{`• ${t('levelSelect.rules.third')}`}</li>
+          <li>{`• ${t('levelSelect.rules.fourth')}`}</li>
         </ul>
       </div>
     </div>

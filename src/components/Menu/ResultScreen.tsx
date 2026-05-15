@@ -2,9 +2,13 @@ import { useGameStore } from '@/store/gameStore';
 import { LEVELS } from '@/game/config/GameConfig';
 import { soundManager } from '@/game/systems/SoundManager';
 import { useEffect } from 'react';
+import { Coins, Home, RotateCcw, SkipForward, Star, XCircle } from 'lucide-react';
+import { SpriteIcon } from '@/components/ui/SpriteIcon';
+import { useI18n } from '@/i18n';
 
 export function ResultScreen() {
   const { currentLevel, score, coins, stars, matchedPairs, nextLevel, setScene } = useGameStore();
+  const { t } = useI18n();
   
   const level = LEVELS.find(l => l.id === currentLevel);
   const isWin = level && matchedPairs >= level.pairs;
@@ -36,30 +40,40 @@ export function ResultScreen() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-950">
       <div className="bg-gradient-to-br from-purple-800/80 to-indigo-900/80 rounded-3xl p-8 shadow-2xl border border-purple-400/30 max-w-sm w-full text-center">
-        <div className="text-6xl mb-4">
-          {isWin ? '🎉' : '😢'}
+        <div className="mb-4 flex justify-center">
+          {isWin ? (
+            <SpriteIcon icon={37} size={76} label={t('result.trophy')} />
+          ) : (
+            <XCircle className="h-20 w-20 text-rose-400" />
+          )}
         </div>
         
         <h1 className={`text-3xl font-bold mb-2 ${isWin ? 'text-green-400' : 'text-red-400'}`}>
-          {isWin ? '恭喜过关！' : '时间到！'}
+          {isWin ? t('result.winTitle') : t('result.loseTitle')}
         </h1>
         
         <p className="text-white/70 mb-6">
-          {isWin ? `成功完成关卡 ${currentLevel}` : '未能在时间内完成'}
+          {isWin ? t('result.winMessage', { level: currentLevel }) : t('result.loseMessage')}
         </p>
 
         <div className="bg-white/10 rounded-xl p-4 mb-6">
           <div className="flex justify-between items-center mb-3">
-            <span className="text-white/70">得分</span>
+            <span className="text-white/70">{t('common.score')}</span>
             <span className="text-yellow-400 font-bold text-xl">{score}</span>
           </div>
           <div className="flex justify-between items-center mb-3">
-            <span className="text-white/70">金币</span>
-            <span className="text-green-400 font-bold text-xl">💰 {coins}</span>
+            <span className="text-white/70">{t('common.coins')}</span>
+            <span className="inline-flex items-center gap-2 text-xl font-bold text-green-400">
+              <Coins className="h-5 w-5" />
+              {coins}
+            </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-white/70">星星</span>
-            <span className="text-purple-400 font-bold text-xl">⭐ {stars}</span>
+            <span className="text-white/70">{t('common.stars')}</span>
+            <span className="inline-flex items-center gap-2 text-xl font-bold text-purple-400">
+              <Star className="h-5 w-5 fill-current" />
+              {stars}
+            </span>
           </div>
         </div>
 
@@ -67,24 +81,27 @@ export function ResultScreen() {
           {isWin && hasNextLevel && (
             <button
               onClick={handleNextLevel}
-              className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 py-4 font-bold text-white transition-all duration-200 shadow-lg hover:from-green-600 hover:to-emerald-700 hover:shadow-xl"
             >
-              🚀 下一关
+              <SkipForward className="h-5 w-5" />
+              {t('common.nextLevel')}
             </button>
           )}
           
           <button
             onClick={handleReplay}
-            className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg"
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 py-4 font-bold text-white transition-all duration-200 shadow-lg hover:from-blue-600 hover:to-indigo-700"
           >
-            🔄 选择关卡
+            <RotateCcw className="h-5 w-5" />
+            {t('result.goToLevelSelect')}
           </button>
           
           <button
             onClick={handleHome}
-            className="w-full py-4 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold rounded-xl transition-all duration-200 shadow-lg"
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-gray-600 to-gray-700 py-4 font-bold text-white transition-all duration-200 shadow-lg hover:from-gray-700 hover:to-gray-800"
           >
-            🏠 返回主页
+            <Home className="h-5 w-5" />
+            {t('result.backToHome')}
           </button>
         </div>
       </div>

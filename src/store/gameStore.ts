@@ -7,6 +7,7 @@ interface GameStore {
   currentLevel: number;
   coins: number;
   stars: number;
+  bgmEnabled: boolean;
   unlockedLevels: number[];
   tiles: Tile[];
   selectedTiles: Tile[];
@@ -28,6 +29,7 @@ interface GameStore {
   resetGame: () => void;
   updateTime: () => void;
   togglePause: () => void;
+  toggleBgm: () => void;
 }
 
 const getSavedData = () => {
@@ -38,11 +40,12 @@ const getSavedData = () => {
   return {
     coins: GAME_CONFIG.baseCoins,
     stars: 0,
+    bgmEnabled: true,
     unlockedLevels: [1],
   };
 };
 
-const saveData = (data: { coins: number; stars: number; unlockedLevels: number[] }) => {
+const saveData = (data: { coins: number; stars: number; unlockedLevels: number[]; bgmEnabled: boolean }) => {
   localStorage.setItem('linkup_save', JSON.stringify(data));
 };
 
@@ -54,6 +57,7 @@ export const useGameStore = create<GameStore>((set, get) => {
     currentLevel: 1,
     coins: saved.coins,
     stars: saved.stars,
+    bgmEnabled: typeof saved.bgmEnabled === 'boolean' ? saved.bgmEnabled : true,
     unlockedLevels: saved.unlockedLevels,
     tiles: [],
     selectedTiles: [],
@@ -131,7 +135,12 @@ export const useGameStore = create<GameStore>((set, get) => {
               newUnlockedLevels = [...state.unlockedLevels, nextLevelId];
             }
             
-            saveData({ coins: newCoins, stars: newStars, unlockedLevels: newUnlockedLevels });
+            saveData({
+              coins: newCoins,
+              stars: newStars,
+              unlockedLevels: newUnlockedLevels,
+              bgmEnabled: state.bgmEnabled,
+            });
             
             return {
               tiles: newTiles,
@@ -216,6 +225,19 @@ export const useGameStore = create<GameStore>((set, get) => {
     
     togglePause: () => {
       set(state => ({ isPaused: !state.isPaused }));
+    },
+
+    toggleBgm: () => {
+      set(state => {
+        const nextBgmEnabled = !state.bgmEnabled;
+        saveData({
+          coins: state.coins,
+          stars: state.stars,
+          unlockedLevels: state.unlockedLevels,
+          bgmEnabled: nextBgmEnabled,
+        });
+        return { bgmEnabled: nextBgmEnabled };
+      });
     },
   };
 });

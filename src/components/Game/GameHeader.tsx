@@ -1,8 +1,13 @@
 import { useGameStore } from '@/store/gameStore';
 import { LEVELS } from '@/game/config/GameConfig';
+import { soundManager } from '@/game/systems/SoundManager';
+import { Clock3, Music2, Music4, Pause, Play, Trophy } from 'lucide-react';
+import { useI18n } from '@/i18n';
 
 export function GameHeader() {
-  const { currentLevel, score, timeLeft, isPaused, togglePause, matchedPairs } = useGameStore();
+  const { currentLevel, score, timeLeft, isPaused, togglePause, matchedPairs, bgmEnabled, toggleBgm } =
+    useGameStore();
+  const { t } = useI18n();
   
   const level = LEVELS.find(l => l.id === currentLevel);
   const progress = level ? Math.round((matchedPairs / level.pairs) * 100) : 0;
@@ -19,36 +24,61 @@ export function GameHeader() {
     return 'text-green-400';
   };
 
+  const handleToggleBgm = () => {
+    soundManager.playClick();
+    const nextEnabled = !bgmEnabled;
+    soundManager.setBgmEnabled(nextEnabled);
+    toggleBgm();
+  };
+
   return (
     <div className="mb-4 w-full max-w-md px-2 sm:px-4">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
-          <span className="text-2xl">⭐</span>
+          <Trophy className="h-6 w-6 text-yellow-300" />
           <span className="text-lg font-bold text-white sm:text-xl">{score}</span>
         </div>
         
         <div className="min-w-0 flex-1 text-center">
-          <div className="text-sm text-white/70">关卡 {currentLevel}</div>
-          <div className="truncate text-sm font-medium text-white sm:text-base">{level?.name}</div>
+          <div className="text-sm text-white/70">{t('common.levelLabel', { level: currentLevel })}</div>
+          <div className="truncate text-sm font-medium text-white sm:text-base">
+            {level ? t(level.nameKey) : ''}
+          </div>
         </div>
         
-        <button
-          onClick={togglePause}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
-        >
-          <span className="text-2xl">{isPaused ? '▶️' : '⏸️'}</span>
-        </button>
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            onClick={handleToggleBgm}
+            className="flex h-10 min-w-10 items-center justify-center rounded-full border border-purple-300/30 bg-white/10 px-3 text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-white/20"
+            aria-label={bgmEnabled ? t('audio.turnOffBgm') : t('audio.turnOnBgm')}
+            title={bgmEnabled ? t('audio.turnOffBgm') : t('audio.turnOnBgm')}
+          >
+            {bgmEnabled ? (
+              <Music4 className="h-5 w-5 text-emerald-300" />
+            ) : (
+              <Music2 className="h-5 w-5 text-rose-300" />
+            )}
+          </button>
+
+          <button
+            onClick={togglePause}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20"
+            aria-label={isPaused ? t('pause.resume') : t('pause.title')}
+          >
+            {isPaused ? <Play className="h-5 w-5 text-white" /> : <Pause className="h-5 w-5 text-white" />}
+          </button>
+        </div>
       </div>
       
       <div className="flex items-center gap-3 sm:gap-4">
         <div className={`flex flex-1 items-center gap-2 ${getTimeColor()}`}>
-          <span className="text-xl">⏱️</span>
+          <Clock3 className="h-5 w-5" />
           <span className="font-mono text-lg font-bold sm:text-xl">{formatTime(timeLeft)}</span>
         </div>
         
         <div className="flex-1">
           <div className="flex items-center justify-between text-white/70 text-xs mb-1">
-            <span>进度</span>
+            <span>{t('common.progress')}</span>
             <span>{matchedPairs}/{level?.pairs}</span>
           </div>
           <div className="h-2 bg-white/20 rounded-full overflow-hidden">
