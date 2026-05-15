@@ -2,6 +2,7 @@ class SoundManager {
   private audioContext: AudioContext | null = null;
   private bgmSource: AudioBufferSourceNode | null = null;
   private isMuted = false;
+  private isBgmEnabled = true;
   private bgmVolume = 0.25;
   private sfxVolume = 0.5;
   private bgmInterval: number | null = null;
@@ -22,6 +23,28 @@ class SoundManager {
   
   setMuted(muted: boolean) {
     this.isMuted = muted;
+    if (muted) {
+      this.stopBackgroundMusic();
+    } else if (this.isBgmEnabled) {
+      this.playBackgroundMusic();
+    }
+  }
+
+  setBgmEnabled(enabled: boolean) {
+    this.isBgmEnabled = enabled;
+
+    if (!enabled) {
+      this.stopBackgroundMusic();
+      return;
+    }
+
+    if (!this.isMuted) {
+      this.playBackgroundMusic();
+    }
+  }
+
+  getBgmEnabled() {
+    return this.isBgmEnabled;
   }
   
   setBgmVolume(volume: number) {
@@ -136,7 +159,7 @@ class SoundManager {
   }
   
   playBackgroundMusic() {
-    if (this.isMuted) return;
+    if (this.isMuted || !this.isBgmEnabled) return;
     if (this.bgmInterval !== null) {
       clearInterval(this.bgmInterval);
     }
@@ -165,7 +188,7 @@ class SoundManager {
     let bassIndex = 0;
     
     const playNote = () => {
-      if (this.isMuted) return;
+      if (this.isMuted || !this.isBgmEnabled) return;
       
       const melodyOsc = ctx.createOscillator();
       const melodyGain = ctx.createGain();

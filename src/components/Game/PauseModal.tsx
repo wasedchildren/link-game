@@ -1,16 +1,23 @@
 import { useGameStore } from '@/store/gameStore';
 import { soundManager } from '@/game/systems/SoundManager';
-import { Pause } from 'lucide-react';
+import { Music2, Music4, Pause } from 'lucide-react';
 import { useI18n } from '@/i18n';
 
 export function PauseModal() {
-  const { isPaused, togglePause, setScene } = useGameStore();
+  const { isPaused, togglePause, setScene, bgmEnabled, toggleBgm } = useGameStore();
   const { t } = useI18n();
   
   if (!isPaused) return null;
 
   const handleClick = () => {
     soundManager.playClick();
+  };
+
+  const handleToggleBgm = () => {
+    soundManager.playClick();
+    const nextEnabled = !bgmEnabled;
+    soundManager.setBgmEnabled(nextEnabled);
+    toggleBgm();
   };
 
   return (
@@ -22,6 +29,18 @@ export function PauseModal() {
         </h2>
         
         <div className="space-y-3">
+          <button
+            onClick={handleToggleBgm}
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-purple-300/30 bg-white/10 py-4 font-bold text-white transition-all duration-200 hover:bg-white/20"
+          >
+            {bgmEnabled ? (
+              <Music4 className="h-5 w-5 text-emerald-300" />
+            ) : (
+              <Music2 className="h-5 w-5 text-rose-300" />
+            )}
+            {bgmEnabled ? t('audio.turnOffBgm') : t('audio.turnOnBgm')}
+          </button>
+
           <button
             onClick={() => { handleClick(); togglePause(); }}
             className="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"

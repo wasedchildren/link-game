@@ -27,6 +27,12 @@ export const translations: Record<SupportedLanguage, TranslationTree> = {
       nextLevel: 'Next Level',
       levelLabel: 'Level {{level}}',
     },
+    audio: {
+      bgmOn: 'Music On',
+      bgmOff: 'Music Off',
+      turnOnBgm: 'Turn On Music',
+      turnOffBgm: 'Turn Off Music',
+    },
     menu: {
       startGame: 'Start Game',
       howToPlay: 'How to Play',
@@ -85,6 +91,12 @@ export const translations: Record<SupportedLanguage, TranslationTree> = {
       progress: '进度',
       nextLevel: '下一关',
       levelLabel: '关卡 {{level}}',
+    },
+    audio: {
+      bgmOn: '音乐已开',
+      bgmOff: '音乐已关',
+      turnOnBgm: '打开背景音乐',
+      turnOffBgm: '关闭背景音乐',
     },
     menu: {
       startGame: '开始游戏',

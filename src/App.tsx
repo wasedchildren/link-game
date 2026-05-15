@@ -9,7 +9,7 @@ import { setupMobileAudio } from '@/utils/mobileAudio';
 import { useI18n } from '@/i18n';
 
 export default function App() {
-  const { scene } = useGameStore();
+  const { scene, bgmEnabled } = useGameStore();
   const { t } = useI18n();
   
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function App() {
     document.body.style.padding = '0';
     document.title = t('app.name');
     const cleanupAudio = setupMobileAudio();
-    soundManager.playBackgroundMusic();
+    soundManager.setBgmEnabled(bgmEnabled);
     
     return () => {
       document.body.style.overflow = '';
@@ -27,7 +27,7 @@ export default function App() {
       cleanupAudio();
       soundManager.stopBackgroundMusic();
     };
-  }, [t]);
+  }, [bgmEnabled, t]);
   
   return (
     <div className="app-shell">

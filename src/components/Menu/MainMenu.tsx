@@ -1,11 +1,11 @@
 import { useGameStore } from '@/store/gameStore';
 import { soundManager } from '@/game/systems/SoundManager';
-import { BookOpen, Coins, Play, Star } from 'lucide-react';
+import { BookOpen, Coins, Music2, Music4, Play, Star } from 'lucide-react';
 import { SpriteIcon } from '@/components/ui/SpriteIcon';
 import { useI18n } from '@/i18n';
 
 export function MainMenu() {
-  const { setScene, coins, stars } = useGameStore();
+  const { setScene, coins, stars, bgmEnabled, toggleBgm } = useGameStore();
   const { t } = useI18n();
 
   const handleStart = () => {
@@ -13,8 +13,29 @@ export function MainMenu() {
     setScene('level_select');
   };
 
+  const handleToggleBgm = () => {
+    soundManager.playClick();
+    const nextEnabled = !bgmEnabled;
+    soundManager.setBgmEnabled(nextEnabled);
+    toggleBgm();
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-indigo-950 via-purple-900 to-pink-950">
+      <div className="mb-6 flex w-full max-w-sm justify-end">
+        <button
+          onClick={handleToggleBgm}
+          className="inline-flex items-center gap-2 rounded-full border border-purple-300/30 bg-white/10 px-4 py-2 text-sm font-semibold text-white shadow-lg backdrop-blur-sm transition-all duration-200 hover:bg-white/20"
+        >
+          {bgmEnabled ? (
+            <Music4 className="h-4 w-4 text-emerald-300" />
+          ) : (
+            <Music2 className="h-4 w-4 text-rose-300" />
+          )}
+          <span>{bgmEnabled ? t('audio.bgmOn') : t('audio.bgmOff')}</span>
+        </button>
+      </div>
+
       <div className="text-center mb-8">
         <h1 className="mb-4 flex items-center justify-center gap-3 text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-pink-400 to-purple-400">
           <SpriteIcon icon={38} size={42} label={t('game.iconLabel')} />
