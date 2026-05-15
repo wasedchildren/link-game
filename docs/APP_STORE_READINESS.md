@@ -25,8 +25,8 @@ Use `wasedchilden@gmail.com` as the public support contact before submission.
 
 App Store Connect requires reachable public URLs. After deployment, you should have public URLs such as:
 
-- `https://your-domain.com/support.html`
-- `https://your-domain.com/privacy-policy.html`
+- `https://your-domain.com/link-game/support.html`
+- `https://your-domain.com/link-game/privacy-policy.html`
 
 ### 3. Prepare App Store screenshots
 
