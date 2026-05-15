@@ -21,8 +21,6 @@ interface I18nContextValue {
   t: (key: string, params?: TranslateParams) => string;
 }
 
-const LANGUAGE_STORAGE_KEY = 'linkup_language';
-
 const I18nContext = createContext<I18nContextValue | null>(null);
 
 function isSupportedLanguage(value: string): value is SupportedLanguage {
@@ -40,16 +38,16 @@ function normalizeLanguage(value?: string | null): SupportedLanguage {
   return DEFAULT_LANGUAGE;
 }
 
-function detectInitialLanguage() {
-  if (typeof window === 'undefined') return DEFAULT_LANGUAGE;
-
-  const savedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  if (savedLanguage) {
-    return normalizeLanguage(savedLanguage);
-  }
+function getPreferredLanguage() {
+  if (typeof navigator === 'undefined') return DEFAULT_LANGUAGE;
 
   const [preferredLanguage] = navigator.languages ?? [navigator.language];
   return normalizeLanguage(preferredLanguage);
+}
+
+function detectInitialLanguage() {
+  if (typeof window === 'undefined') return DEFAULT_LANGUAGE;
+  return getPreferredLanguage();
 }
 
 function getNestedTranslation(source: Record<string, unknown>, key: string): string | null {
@@ -76,8 +74,21 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    window.localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
   }, [language]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const syncLanguageWithDevice = () => {
+      setLanguage(getPreferredLanguage());
+    };
+
+    window.addEventListener('languagechange', syncLanguageWithDevice);
+
+    return () => {
+      window.removeEventListener('languagechange', syncLanguageWithDevice);
+    };
+  }, []);
 
   const value = useMemo<I18nContextValue>(() => {
     const t = (key: string, params?: TranslateParams) => {
