@@ -13,20 +13,25 @@ This checklist reflects the current state of the repository on May 15, 2026.
 
 ## Still Recommended Before Submission
 
-### 1. Replace placeholder support contact
-
-The support page currently contains a placeholder:
-
-- `public/support.html`
-
-Use `wasedchilden@gmail.com` as the public support contact before submission.
-
-### 2. Upload and host your support and privacy pages
+### 1. Upload and host your support and privacy pages
 
 App Store Connect requires reachable public URLs. After deployment, you should have public URLs such as:
 
-- `https://your-domain.com/link-game/support.html`
-- `https://your-domain.com/link-game/privacy-policy.html`
+- `https://wasedchildren.top/link-game/support.html`
+- `https://wasedchildren.top/link-game/privacy-policy.html`
+- `https://www.children.top/support.html`
+- `https://www.children.top/privacy-policy.html`
+
+The current support page already uses the public support email:
+
+- `wasedchilden@gmail.com`
+
+### 2. Confirm your final public domain choice
+
+This repo now supports GitHub Pages style deployment and includes a `public/CNAME` file for a custom domain.
+
+- Keep `public/CNAME` as `www.children.top` if that is the domain you want GitHub Pages to serve directly.
+- Remove or replace that file if you decide the public URLs should live under another domain such as `wasedchildren.top`.
 
 ### 3. Prepare App Store screenshots
 
@@ -84,6 +89,12 @@ You now have a support page in:
 You now have a privacy page in:
 
 - `public/privacy-policy.html`
+
+### Custom Domain
+
+The Pages custom domain file is now stored in:
+
+- `public/CNAME`
 
 ### App Store Copy Draft
 

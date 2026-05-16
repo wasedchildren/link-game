@@ -20,7 +20,7 @@ export function ResultScreen() {
     } else {
       soundManager.playError();
     }
-  }, []);
+  }, [isWin]);
 
   const handleNextLevel = () => {
     soundManager.playClick();

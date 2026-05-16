@@ -1,27 +1,11 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { I18nContext, type I18nContextValue, type TranslateParams } from './context';
 import {
   DEFAULT_LANGUAGE,
   SUPPORTED_LANGUAGES,
   translations,
   type SupportedLanguage,
 } from './translations';
-
-type TranslateParams = Record<string, string | number>;
-
-interface I18nContextValue {
-  language: SupportedLanguage;
-  setLanguage: (language: SupportedLanguage) => void;
-  t: (key: string, params?: TranslateParams) => string;
-}
-
-const I18nContext = createContext<I18nContextValue | null>(null);
 
 function isSupportedLanguage(value: string): value is SupportedLanguage {
   return SUPPORTED_LANGUAGES.includes(value as SupportedLanguage);
@@ -110,14 +94,4 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, [language]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
-}
-
-export function useI18n() {
-  const context = useContext(I18nContext);
-
-  if (!context) {
-    throw new Error('useI18n must be used within an I18nProvider');
-  }
-
-  return context;
 }
