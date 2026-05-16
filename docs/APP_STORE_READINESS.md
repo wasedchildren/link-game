@@ -17,10 +17,8 @@ This checklist reflects the current state of the repository on May 15, 2026.
 
 App Store Connect requires reachable public URLs. After deployment, you should have public URLs such as:
 
-- `https://wasedchildren.top/link-game/support.html`
-- `https://wasedchildren.top/link-game/privacy-policy.html`
-- `https://www.children.top/support.html`
-- `https://www.children.top/privacy-policy.html`
+- `https://www.wasedchildren.top/support.html`
+- `https://www.wasedchildren.top/privacy-policy.html`
 
 The current support page already uses the public support email:
 
@@ -30,8 +28,8 @@ The current support page already uses the public support email:
 
 This repo now supports GitHub Pages style deployment and includes a `public/CNAME` file for a custom domain.
 
-- Keep `public/CNAME` as `www.children.top` if that is the domain you want GitHub Pages to serve directly.
-- Remove or replace that file if you decide the public URLs should live under another domain such as `wasedchildren.top`.
+- Keep `public/CNAME` as `www.wasedchildren.top` if that is the domain you want GitHub Pages to serve directly.
+- If you later switch to a subpath deployment such as `https://wasedchildren.top/link-game/`, update `public/CNAME` again or remove it from the Pages publish flow.
 
 ### 3. Prepare App Store screenshots
 
