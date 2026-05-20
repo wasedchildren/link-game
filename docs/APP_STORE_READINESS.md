@@ -17,8 +17,8 @@ This checklist reflects the current state of the repository on May 15, 2026.
 
 App Store Connect requires reachable public URLs. After deployment, you should have public URLs such as:
 
-- `https://www.wasedchildren.top/support.html`
-- `https://www.wasedchildren.top/privacy-policy.html`
+- `https://www.wasedchildren.top/link-game/support.html`
+- `https://www.wasedchildren.top/link-game/privacy-policy.html`
 
 The current support page already uses the public support email:
 

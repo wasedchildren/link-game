@@ -1,11 +1,13 @@
 import { useGameStore } from '@/store/gameStore';
+import { LEVELS } from '@/game/config/GameConfig';
 import { soundManager } from '@/game/systems/SoundManager';
 import { Music2, Music4, Pause } from 'lucide-react';
 import { useI18n } from '@/i18n';
 
 export function PauseModal() {
-  const { isPaused, togglePause, setScene, bgmEnabled, toggleBgm } = useGameStore();
+  const { isPaused, togglePause, setScene, bgmEnabled, toggleBgm, currentLevel, comboBest } = useGameStore();
   const { t } = useI18n();
+  const level = LEVELS.find((item) => item.id === currentLevel);
   
   if (!isPaused) return null;
 
@@ -27,6 +29,13 @@ export function PauseModal() {
           <Pause className="h-7 w-7" />
           <span>{t('pause.title')}</span>
         </h2>
+
+        {level && (
+          <div className="mb-5 rounded-2xl border border-white/10 bg-white/6 p-4 text-sm leading-6 text-white/70">
+            <div>{t('pause.missionSummary', { score: level.mission.scoreTarget, combo: level.mission.comboTarget })}</div>
+            <div className="mt-2 text-cyan-200">{t('pause.currentComboBest', { combo: comboBest })}</div>
+          </div>
+        )}
         
         <div className="space-y-3">
           <button

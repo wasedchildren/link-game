@@ -2,12 +2,12 @@ import { useGameStore } from '@/store/gameStore';
 import { LEVELS } from '@/game/config/GameConfig';
 import { soundManager } from '@/game/systems/SoundManager';
 import { useEffect } from 'react';
-import { Coins, Home, RotateCcw, SkipForward, Star, XCircle } from 'lucide-react';
+import { Award, Coins, Home, RotateCcw, SkipForward, Sparkles, Star, XCircle } from 'lucide-react';
 import { SpriteIcon } from '@/components/ui/SpriteIcon';
 import { useI18n } from '@/i18n';
 
 export function ResultScreen() {
-  const { currentLevel, score, coins, stars, matchedPairs, nextLevel, setScene } = useGameStore();
+  const { currentLevel, score, coins, stars, matchedPairs, nextLevel, setScene, levelResult } = useGameStore();
   const { t } = useI18n();
   
   const level = LEVELS.find(l => l.id === currentLevel);
@@ -77,6 +77,43 @@ export function ResultScreen() {
           </div>
         </div>
 
+        {level && levelResult && (
+          <div className="mb-6 rounded-2xl border border-white/10 bg-black/20 p-4 text-left">
+            <div className="mb-3 flex items-center gap-2 text-white">
+              <Award className="h-5 w-5 text-amber-300" />
+              <span className="font-bold">{t('result.missionTitle')}</span>
+            </div>
+            <div className="space-y-2 text-sm text-white/72">
+              <div className="flex items-center justify-between gap-3">
+                <span>{t('result.missionScoreTarget', { score: level.mission.scoreTarget })}</span>
+                <span className={levelResult.missionProgress.reachedScoreTarget ? 'text-emerald-300' : 'text-rose-300'}>
+                  {levelResult.missionProgress.reachedScoreTarget ? t('result.completed') : t('result.notCompleted')}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <span>{t('result.missionComboTarget', { combo: level.mission.comboTarget })}</span>
+                <span className={levelResult.missionProgress.reachedComboTarget ? 'text-emerald-300' : 'text-rose-300'}>
+                  {levelResult.missionProgress.reachedComboTarget ? t('result.completed') : t('result.notCompleted')}
+                </span>
+              </div>
+              <div className="mt-3 rounded-xl bg-white/6 p-3">
+                <div className="flex items-center justify-between">
+                  <span>{t('result.bestCombo')}</span>
+                  <span className="font-bold text-cyan-200">{levelResult.comboBest}</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <span>{t('result.missionReward')}</span>
+                  <span className="font-bold text-amber-200">+{levelResult.coinsEarned} {t('common.coins')}</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between">
+                  <span>{t('result.timeLeft')}</span>
+                  <span className="font-bold text-white">{levelResult.timeLeft}s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-3">
           {isWin && hasNextLevel && (
             <button
@@ -94,6 +131,17 @@ export function ResultScreen() {
           >
             <RotateCcw className="h-5 w-5" />
             {t('result.goToLevelSelect')}
+          </button>
+
+          <button
+            onClick={() => {
+              soundManager.playClick();
+              setScene('tutorial');
+            }}
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-fuchsia-500 to-violet-600 py-4 font-bold text-white transition-all duration-200 shadow-lg hover:from-fuchsia-600 hover:to-violet-700"
+          >
+            <Sparkles className="h-5 w-5" />
+            {t('result.reviewTips')}
           </button>
           
           <button

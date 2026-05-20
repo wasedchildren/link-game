@@ -1,12 +1,26 @@
 import { useGameStore } from '@/store/gameStore';
 import { LEVELS } from '@/game/config/GameConfig';
 import { soundManager } from '@/game/systems/SoundManager';
-import { Clock3, Music2, Music4, Pause, Play, Trophy } from 'lucide-react';
+import { Clock3, Lightbulb, Music2, Music4, Pause, Play, Shuffle, Trophy } from 'lucide-react';
 import { useI18n } from '@/i18n';
 
 export function GameHeader() {
-  const { currentLevel, score, timeLeft, isPaused, togglePause, matchedPairs, bgmEnabled, toggleBgm } =
-    useGameStore();
+  const {
+    currentLevel,
+    score,
+    timeLeft,
+    isPaused,
+    togglePause,
+    matchedPairs,
+    bgmEnabled,
+    toggleBgm,
+    combo,
+    comboBest,
+    hintUsesLeft,
+    shuffleUsesLeft,
+    triggerHint,
+    triggerShuffle,
+  } = useGameStore();
   const { t } = useI18n();
   
   const level = LEVELS.find(l => l.id === currentLevel);
@@ -31,8 +45,18 @@ export function GameHeader() {
     toggleBgm();
   };
 
+  const handleHint = () => {
+    soundManager.playClick();
+    triggerHint();
+  };
+
+  const handleShuffle = () => {
+    soundManager.playClick();
+    triggerShuffle();
+  };
+
   return (
-    <div className="mb-4 w-full max-w-md px-2 sm:px-4">
+    <div className="mb-4 w-full max-w-2xl px-2 sm:px-4">
       <div className="mb-3 flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
           <Trophy className="h-6 w-6 text-yellow-300" />
@@ -89,6 +113,51 @@ export function GameHeader() {
           </div>
         </div>
       </div>
+
+      {level && (
+        <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto_auto]">
+          <div className="rounded-2xl border border-white/10 bg-white/8 p-3">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/45">
+              {t('game.missionTitle')}
+            </div>
+            <div className="mt-2 text-sm leading-6 text-white/72">
+              {t('game.missionSummary', {
+                score: level.mission.scoreTarget,
+                combo: level.mission.comboTarget,
+              })}
+            </div>
+            <div className="mt-2 text-xs text-white/50">
+              {t('game.comboState', { combo, best: comboBest })}
+            </div>
+          </div>
+
+          <button
+            onClick={handleHint}
+            className="rounded-2xl border border-amber-300/20 bg-amber-400/10 px-4 py-3 text-left text-white transition hover:bg-amber-400/16"
+          >
+            <div className="flex items-center gap-2 text-sm font-bold">
+              <Lightbulb className="h-4 w-4 text-amber-300" />
+              {t('game.tools.hint')}
+            </div>
+            <div className="mt-1 text-xs text-white/62">
+              {t('game.toolsRemaining', { count: hintUsesLeft })}
+            </div>
+          </button>
+
+          <button
+            onClick={handleShuffle}
+            className="rounded-2xl border border-cyan-300/20 bg-cyan-400/10 px-4 py-3 text-left text-white transition hover:bg-cyan-400/16"
+          >
+            <div className="flex items-center gap-2 text-sm font-bold">
+              <Shuffle className="h-4 w-4 text-cyan-300" />
+              {t('game.tools.shuffle')}
+            </div>
+            <div className="mt-1 text-xs text-white/62">
+              {t('game.toolsRemaining', { count: shuffleUsesLeft })}
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { MainMenu } from '@/components/Menu/MainMenu';
 import { LevelSelect } from '@/components/Menu/LevelSelect';
 import { GameScene } from '@/components/Game/GameScene';
 import { ResultScreen } from '@/components/Menu/ResultScreen';
+import { TutorialScreen } from '@/components/Menu/TutorialScreen';
 import { soundManager } from '@/game/systems/SoundManager';
 import { setupMobileAudio } from '@/utils/mobileAudio';
 import { useI18n } from '@/i18n';
@@ -32,6 +33,7 @@ export default function App() {
   return (
     <div className="app-shell">
       {scene === 'menu' && <MainMenu />}
+      {scene === 'tutorial' && <TutorialScreen />}
       {scene === 'level_select' && <LevelSelect />}
       {scene === 'game' && <GameScene />}
       {scene === 'result' && <ResultScreen />}

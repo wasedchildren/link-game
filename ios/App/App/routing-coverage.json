@@ -1,0 +1,9 @@
+{
+  "paths": [
+    "/link-game/*",
+    "/link-game",
+    "/game/*",
+    "/play/*"
+  ],
+  "version": "1.0"
+}

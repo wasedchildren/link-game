@@ -11,8 +11,8 @@ Before submitting the app, make sure these two URLs are publicly reachable over 
 
 If you keep the current Pages custom domain setup, the likely URLs are:
 
-- `https://www.wasedchildren.top/support.html`
-- `https://www.wasedchildren.top/privacy-policy.html`
+- `https://www.wasedchildren.top/link-game/support.html`
+- `https://www.wasedchildren.top/link-game/privacy-policy.html`
 
 If you publish under a subpath instead, update the URLs accordingly before filling App Store Connect.
 

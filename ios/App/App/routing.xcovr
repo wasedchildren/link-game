@@ -1,0 +1,14 @@
+{
+  "appClips": [
+    {
+      "clipBundleIdentifier": "com.qiujun.linkgame.Clip",
+      "routingRules": [
+        {
+          "comment": "Universal link for App Clip",
+          "pattern": "https://www.wasedchildren.top/link-game/*",
+          "priority": "HIGH"
+        }
+      ]
+    }
+  ]
+}
