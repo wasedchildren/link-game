@@ -6,7 +6,7 @@ export function setupMobileAudio() {
   let removed = false;
 
   const resumeAudio = () => {
-    void soundManager.resumeContext();
+    void soundManager.activateAudio();
   };
 
   const handleVisibilityChange = () => {

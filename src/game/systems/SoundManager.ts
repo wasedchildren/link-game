@@ -6,12 +6,39 @@ class SoundManager {
   private bgmVolume = 0.25;
   private sfxVolume = 0.5;
   private bgmInterval: number | null = null;
+  private isActivating = false;
+  private hasPrimedAudio = false;
   
   private initContext() {
     if (!this.audioContext) {
-      this.audioContext = new AudioContext();
+      const AudioContextConstructor =
+        window.AudioContext ||
+        // `webkitAudioContext` is still the more reliable fallback on some iOS WebViews.
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+
+      if (!AudioContextConstructor) {
+        throw new Error('Web Audio API is not available in this environment.');
+      }
+
+      this.audioContext = new AudioContextConstructor();
     }
     return this.audioContext;
+  }
+
+  private primeAudioContext(ctx: AudioContext) {
+    if (this.hasPrimedAudio) return;
+
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    gainNode.gain.setValueAtTime(0.0001, ctx.currentTime);
+    oscillator.frequency.setValueAtTime(440, ctx.currentTime);
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + 0.01);
+
+    this.hasPrimedAudio = true;
   }
 
   async resumeContext() {
@@ -19,6 +46,44 @@ class SoundManager {
     if (ctx.state === 'suspended') {
       await ctx.resume();
     }
+    return ctx;
+  }
+
+  async activateAudio() {
+    if (this.isActivating) return;
+
+    this.isActivating = true;
+
+    try {
+      const ctx = await this.resumeContext();
+      this.primeAudioContext(ctx);
+      if (!this.isMuted && this.isBgmEnabled && this.bgmInterval === null && ctx.state === 'running') {
+        this.playBackgroundMusic();
+      }
+    } catch {
+      // Ignore activation failures from platforms that require direct user gestures.
+    } finally {
+      this.isActivating = false;
+    }
+  }
+
+  private playWithReadyContext(callback: (ctx: AudioContext) => void) {
+    if (this.isMuted) return;
+
+    const ctx = this.initContext();
+
+    if (ctx.state === 'running') {
+      callback(ctx);
+      return;
+    }
+
+    void this.resumeContext()
+      .then((readyContext) => {
+        callback(readyContext);
+      })
+      .catch(() => {
+        // Ignore playback when the browser refuses to unlock audio.
+      });
   }
   
   setMuted(muted: boolean) {
@@ -39,7 +104,7 @@ class SoundManager {
     }
 
     if (!this.isMuted) {
-      this.playBackgroundMusic();
+      void this.activateAudio();
     }
   }
 
@@ -56,105 +121,103 @@ class SoundManager {
   }
   
   playClick() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    
-    oscillator.frequency.setValueAtTime(800, ctx.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.1);
-    
-    gainNode.gain.setValueAtTime(this.sfxVolume, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-    
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 0.1);
+    this.playWithReadyContext((ctx) => {
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.frequency.setValueAtTime(800, ctx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.1);
+
+      gainNode.gain.setValueAtTime(this.sfxVolume, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.1);
+    });
   }
   
   playSelect() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    
-    oscillator.frequency.setValueAtTime(600, ctx.currentTime);
-    oscillator.frequency.setValueAtTime(800, ctx.currentTime + 0.05);
-    
-    gainNode.gain.setValueAtTime(this.sfxVolume * 0.7, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-    
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 0.1);
+    this.playWithReadyContext((ctx) => {
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.frequency.setValueAtTime(600, ctx.currentTime);
+      oscillator.frequency.setValueAtTime(800, ctx.currentTime + 0.05);
+
+      gainNode.gain.setValueAtTime(this.sfxVolume * 0.7, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.1);
+    });
   }
   
   playSuccess() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    
-    const notes = [523.25, 659.25, 783.99, 1046.50];
-    notes.forEach((freq, i) => {
-      const oscillator = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(ctx.destination);
-      
-      oscillator.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
-      oscillator.type = 'sine';
-      
-      gainNode.gain.setValueAtTime(this.sfxVolume * 0.5, ctx.currentTime + i * 0.1);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.1 + 0.3);
-      
-      oscillator.start(ctx.currentTime + i * 0.1);
-      oscillator.stop(ctx.currentTime + i * 0.1 + 0.3);
+    this.playWithReadyContext((ctx) => {
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, i) => {
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
+        oscillator.type = 'sine';
+
+        gainNode.gain.setValueAtTime(this.sfxVolume * 0.5, ctx.currentTime + i * 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.1 + 0.3);
+
+        oscillator.start(ctx.currentTime + i * 0.1);
+        oscillator.stop(ctx.currentTime + i * 0.1 + 0.3);
+      });
     });
   }
   
   playError() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-    
-    oscillator.frequency.setValueAtTime(200, ctx.currentTime);
-    oscillator.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
-    
-    gainNode.gain.setValueAtTime(this.sfxVolume * 0.5, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-    
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + 0.3);
+    this.playWithReadyContext((ctx) => {
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.frequency.setValueAtTime(200, ctx.currentTime);
+      oscillator.frequency.setValueAtTime(150, ctx.currentTime + 0.15);
+
+      gainNode.gain.setValueAtTime(this.sfxVolume * 0.5, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + 0.3);
+    });
   }
   
   playLevelComplete() {
-    if (this.isMuted) return;
-    const ctx = this.initContext();
-    
-    const notes = [523.25, 659.25, 783.99, 1046.50, 1244.51];
-    notes.forEach((freq, i) => {
-      const oscillator = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(ctx.destination);
-      
-      oscillator.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
-      oscillator.type = 'sine';
-      
-      gainNode.gain.setValueAtTime(this.sfxVolume * 0.4, ctx.currentTime + i * 0.12);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.12 + 0.4);
-      
-      oscillator.start(ctx.currentTime + i * 0.12);
-      oscillator.stop(ctx.currentTime + i * 0.12 + 0.4);
+    this.playWithReadyContext((ctx) => {
+      const notes = [523.25, 659.25, 783.99, 1046.5, 1244.51];
+      notes.forEach((freq, i) => {
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        oscillator.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.12);
+        oscillator.type = 'sine';
+
+        gainNode.gain.setValueAtTime(this.sfxVolume * 0.4, ctx.currentTime + i * 0.12);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.12 + 0.4);
+
+        oscillator.start(ctx.currentTime + i * 0.12);
+        oscillator.stop(ctx.currentTime + i * 0.12 + 0.4);
+      });
     });
   }
   
@@ -165,6 +228,9 @@ class SoundManager {
     }
     
     const ctx = this.initContext();
+    if (ctx.state !== 'running') {
+      return;
+    }
     
     const melody = [
       523.25, 587.33, 659.25, 698.46, 783.99, 698.46, 659.25, 587.33,
