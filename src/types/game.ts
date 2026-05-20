@@ -1,6 +1,8 @@
+import type { IconToken } from '@/assets/iconRegistry';
+
 export interface Tile {
   id: string;
-  icon: number;
+  icon: IconToken;
   row: number;
   col: number;
   isMatched: boolean;
@@ -30,7 +32,7 @@ export interface Chapter {
   summaryKey: string;
   accentFrom: string;
   accentTo: string;
-  mascotIcon: number;
+  mascotIcon: IconToken;
 }
 
 export interface MissionProgress {

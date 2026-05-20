@@ -86,7 +86,7 @@ export function MainMenu() {
                 <div className="mt-2 text-2xl font-black text-white">{t(featuredChapter.nameKey)}</div>
               </div>
               <div className="rounded-2xl bg-gradient-to-br from-amber-300 to-rose-500 p-3">
-                <SpriteIcon icon={featuredChapter.mascotIcon} size={42} label={t('game.iconLabel')} />
+                <SpriteIcon icon={featuredChapter.mascotIcon} size={54} label={t('game.iconLabel')} />
               </div>
             </div>
 
@@ -178,7 +178,7 @@ export function MainMenu() {
                 <div
                   className={`rounded-2xl bg-gradient-to-br ${chapter.accentFrom} ${chapter.accentTo} p-3 shadow-lg`}
                 >
-                  <SpriteIcon icon={chapter.mascotIcon} size={34} label={t('game.iconLabel')} />
+                  <SpriteIcon icon={chapter.mascotIcon} size={48} label={t('game.iconLabel')} />
                 </div>
                 <span className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">
                   {t(chapter.themeKey)}

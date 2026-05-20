@@ -77,7 +77,7 @@ export function LevelSelect() {
                     >
                       <SpriteIcon
                         icon={chapter.mascotIcon}
-                        size={44}
+                        size={60}
                         label={t('levelSelect.unlockedLevelIcon')}
                       />
                     </div>
@@ -124,7 +124,7 @@ export function LevelSelect() {
                           {unlocked ? (
                             <SpriteIcon
                               icon={chapter.mascotIcon}
-                              size={28}
+                              size={40}
                               label={t('levelSelect.unlockedLevelIcon')}
                             />
                           ) : (

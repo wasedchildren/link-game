@@ -1,11 +1,4 @@
-const iconModules = import.meta.glob('../../assets/icons/cropped_icons_48/*.png', {
-  eager: true,
-  import: 'default',
-}) as Record<string, string>;
-
-const iconSources = Object.entries(iconModules)
-  .sort(([a], [b]) => a.localeCompare(b))
-  .map(([, src]) => src);
+import { getIconSource, type IconToken } from '@/assets/iconRegistry';
 
 const fallbackGlyphs = ['🐶', '🐱', '🐰', '🐼', '🦊', '🐸', '🐵', '🐻', '🍎', '🍓', '🍋', '🍇'];
 const fallbackGradients = [
@@ -16,7 +9,7 @@ const fallbackGradients = [
 ];
 
 interface SpriteIconProps {
-  icon: number;
+  icon: IconToken;
   size?: number;
   className?: string;
   label?: string;
@@ -28,12 +21,15 @@ export function SpriteIcon({
   className,
   label,
 }: SpriteIconProps) {
-  const safeIcon = Math.max(0, Math.min(icon, iconSources.length - 1));
-  const src = iconSources[safeIcon];
+  const src = getIconSource(icon);
 
   if (!src) {
-    const glyph = fallbackGlyphs[icon % fallbackGlyphs.length];
-    const gradient = fallbackGradients[icon % fallbackGradients.length];
+    const fallbackIndex =
+      typeof icon === 'number'
+        ? icon
+        : Array.from(icon).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const glyph = fallbackGlyphs[fallbackIndex % fallbackGlyphs.length];
+    const gradient = fallbackGradients[fallbackIndex % fallbackGradients.length];
 
     return (
       <span

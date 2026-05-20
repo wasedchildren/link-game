@@ -1,3 +1,4 @@
+import type { IconToken } from '@/assets/iconRegistry';
 import type { Chapter, Level, Tile } from '@/types/game';
 
 export const ICONS = [
@@ -16,7 +17,7 @@ export const CHAPTERS: Chapter[] = [
     summaryKey: 'chapters.chapter1.summary',
     accentFrom: 'from-amber-400',
     accentTo: 'to-rose-500',
-    mascotIcon: 8,
+    mascotIcon: 'lantern-garden-01-lantern',
   },
   {
     id: 2,
@@ -25,7 +26,7 @@ export const CHAPTERS: Chapter[] = [
     summaryKey: 'chapters.chapter2.summary',
     accentFrom: 'from-emerald-400',
     accentTo: 'to-cyan-500',
-    mascotIcon: 18,
+    mascotIcon: 'tidal-boardwalk-01-seashell',
   },
   {
     id: 3,
@@ -34,7 +35,7 @@ export const CHAPTERS: Chapter[] = [
     summaryKey: 'chapters.chapter3.summary',
     accentFrom: 'from-sky-400',
     accentTo: 'to-indigo-500',
-    mascotIcon: 28,
+    mascotIcon: 'midnight-avenue-02-moon',
   },
   {
     id: 4,
@@ -43,15 +44,43 @@ export const CHAPTERS: Chapter[] = [
     summaryKey: 'chapters.chapter4.summary',
     accentFrom: 'from-fuchsia-400',
     accentTo: 'to-violet-500',
-    mascotIcon: 38,
+    mascotIcon: 'starfall-heights-01-crystal',
   },
 ];
 
-const CHAPTER_ICON_POOLS: Record<number, number[]> = {
-  1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
-  2: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39],
-  3: [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 4, 8, 12, 16, 30, 34, 35, 36, 37],
-  4: [30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 5, 9, 13, 17, 21, 25, 29, 18, 19, 28],
+const CHAPTER_ICON_POOLS: Record<number, IconToken[]> = {
+  1: [
+    'lantern-garden-01-lantern',
+    'lantern-garden-02-petals',
+    'lantern-garden-03-strawberry',
+    'lantern-garden-04-fox',
+    'lantern-garden-05-rabbit',
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+  ],
+  2: [
+    'tidal-boardwalk-01-seashell',
+    'tidal-boardwalk-02-starfish',
+    'tidal-boardwalk-03-blueberries',
+    'tidal-boardwalk-04-water-drop',
+    'tidal-boardwalk-05-dolphin',
+    10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+  ],
+  3: [
+    'midnight-avenue-01-neon-candy',
+    'midnight-avenue-02-moon',
+    'midnight-avenue-03-star',
+    'midnight-avenue-04-night-owl',
+    'midnight-avenue-05-grapes',
+    20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
+  ],
+  4: [
+    'starfall-heights-01-crystal',
+    'starfall-heights-02-meteor',
+    'starfall-heights-03-aurora-fruit',
+    'starfall-heights-04-cloud',
+    'starfall-heights-05-glow-pet',
+    30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+  ],
 };
 
 export function getChapterById(chapterId: number) {
